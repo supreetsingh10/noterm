@@ -5,18 +5,11 @@ use crate::backend::constants::{SMALL_WIDTH, MID_WIDTH, WIDE_WIDTH};
 
 use super::constants::{MID_HEIGHT, SMALL_HEIGHT, TALL_HEIGHT}; 
 
-// Do I need a initializer function before I parse the file. 
-// The messages type should be initialized. 
-// Messages vec will allow us to index the messages, and later write them on a file if needed. 
-// The Mesage struct will hold all the key value pairs.
 #[derive(Serialize, Deserialize, Debug, Clone,)]
 pub struct Messages {
     pub messages: Vec<Message>
 }
 
-
-// Make a struct for every mesage. 
-// Parse through key and value. 
 #[derive(serde::Serialize, serde::Deserialize, Debug, Clone)]
 pub struct Message {
     message_id: u32,
@@ -30,7 +23,6 @@ const TEXT_AREA_WIDTH_LOW: u16 = 50;
 const TEXT_AREA_WIDTH_HIGH: u16 = 75; 
 
 impl Message {
-
     pub fn required_spaces(&self) -> u16 {
         let c: u16 = 3; 
         c

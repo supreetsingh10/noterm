@@ -1,24 +1,42 @@
-use clap::{Arg, App};
+use clap::{Arg, App, SubCommand, ArgMatches};
 use libra::backend::commands; 
 use libra::backend::config::init_config;
 use libra::backend::messages;
 use libra::ui::notes; 
 
-fn main() -> Result<(), String> {
-    // this will have argument parsing.
-    // backend will have command selection
-
-    let matches = App::new("Sticky term").
+fn get_matches() -> ArgMatches<'static> {
+     App::new("Sticky term").
         about("Make sticky notes for your terminal").
-        arg(Arg::with_name("pin").
-            short("p").
-            long("pin").
-            takes_value(true)).
-        arg(Arg::with_name("show").
-            short("s").
-            long("show").
-            takes_value(false)).
-        get_matches();
+        subcommand(SubCommand::with_name("pin").
+                   about("Pin the message").
+                   arg(Arg::with_name("message").
+                       short("m").
+                       long("msg").
+                       takes_value(true)).
+                   arg(Arg::with_name("color").
+                       short("col").
+                       long("color"))).
+        subcommand(SubCommand::with_name("show").
+                   about("Show the messages").
+                   arg(Arg::with_name("all").
+                       short("a").
+                       long("all").
+                       takes_value(false)).
+                   arg(Arg::with_name("note").
+                       short("n").
+                       long("note").
+                       takes_value(true))).
+        subcommand(SubCommand::with_name("update").
+                   about("Update the given note").
+                   arg(Arg::with_name("note").
+                       short("n").
+                       long("note").
+                       takes_value(true))).get_matches() 
+
+}
+
+fn main() -> Result<(), String> {
+    let matches = get_matches(); 
 
     let lazy_config = match init_config() {
         Ok(c) => c,
@@ -34,6 +52,7 @@ fn main() -> Result<(), String> {
         }
     }; 
 
+    commands::exec_cmds(par_cmds, &matches); 
 
     let parsed_messages = match messages::parse_config(lazy_config) {
         Ok(m) => m ,
@@ -42,7 +61,7 @@ fn main() -> Result<(), String> {
         },
     };
 
-    notes::render_notes(&parsed_messages); 
+    // notes::render_notes(&parsed_messages); 
 
     Ok(())
 }

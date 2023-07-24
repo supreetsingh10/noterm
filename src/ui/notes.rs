@@ -22,9 +22,8 @@ pub fn render_notes(msg: &Messages) {
             let chunks = Layout::default().
                 direction(Direction::Vertical).
                 constraints([
-                            Constraint::Ratio(1, 4),
-                            Constraint::Ratio(2, 4),
-                            Constraint::Ratio(1, 4),
+                            Constraint::Ratio(1, 10),
+                            Constraint::Ratio(5, 2),
                 ].
                 as_ref()).
                 split(rect);
