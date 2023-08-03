@@ -37,9 +37,13 @@ fn count_note_lines(msg_text: &str) -> u16 {
 
 // [(0, 3), (2, 0)]
 pub fn render(msg: &Messages) {
-    let term = Terminal::new(CrosstermBackend::new(stdout())).unwrap(); 
+    let mut term = Terminal::new(CrosstermBackend::new(stdout())).unwrap(); 
     let coord_vec = fix_coordinates_of_notes(&msg, &term).unwrap(); 
     // use these coordinates to render later.
+    //
+    term.draw(|f| {
+        let rect = f.size(); 
+    }); 
 
 }
 
