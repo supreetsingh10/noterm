@@ -34,13 +34,6 @@ pub fn init_config() -> Result<Config, String> {
 
 
 impl Config {
-    /// new fn that will be called when the terminal is opened
-    /// It will be called regardless if the app has been started the first time or not. 
-    /// if the once if false then it will create the file and the configuration file.  
-    ///
-    ///
-    ///
-
     pub fn new() -> Self {
         Self {
             config_text: String::from(""), 
@@ -52,9 +45,6 @@ impl Config {
         self.config_text
     }
 
-    /// Check for a config file at CONFIG_PATH and if it does not exist then create that file
-    /// otherwise load the file. If the file exists, then the application has been run atleast
-    /// once. 
     fn load_or_create_config_file(&mut self) ->  Result<(), String> {
         // Get the environment variable home and appends it to the CONFIG_PATH
         var(ENV_HOME_VAR).

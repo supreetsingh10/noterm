@@ -5,7 +5,6 @@ use tui::backend::CrosstermBackend;
 use tui::layout::{Layout, Constraint, Rect};
 use tui::widgets::{Paragraph, Wrap};
 use tui::{Terminal, layout};
-use tui::prelude::Text; 
 use crate::backend::messages::{Messages, Message}; 
 use crate::backend::constants::NOTE_WIDTH; 
 
@@ -40,9 +39,16 @@ fn rects_for_notes(coord: Coords) -> Rect {
     Rect::new(coord.0, coord.1, coord.2, coord.3)
 }
 
-pub fn render(msg: &Messages) {
-    let mut term = Terminal::new(CrosstermBackend::new(stdout())).unwrap(); 
-    let coord_vec = fix_coordinates_of_notes(&msg, &mut term).unwrap(); 
+pub fn render(msg: &Messages) -> Result<(), String> {
+    let mut term = match Terminal::new(CrosstermBackend::new(stdout())) {
+        Ok(t) => t,
+        Err(s) => return Err(s.to_string()),
+    };
+
+    let coord_vec = match fix_coordinates_of_notes(&msg, &mut term) {
+        Ok(v) => v,
+        Err(e) => return Err(e.to_string()),
+    };
 
     term.draw(|f| {
         for (m_it, c_it) in msg.messages.clone().iter().zip(coord_vec.iter()) {
@@ -78,7 +84,14 @@ pub fn render(msg: &Messages) {
                 }
             }
         }
-    }).unwrap(); 
+    }).
+    map(|_| {
+        ()
+    }).
+    map_err(|e| {
+        e.to_string()
+    })
+
 }
 
 /// Needs to be tested.

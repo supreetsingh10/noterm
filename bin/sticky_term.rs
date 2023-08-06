@@ -52,8 +52,6 @@ fn main() -> Result<(), String> {
         }
     }; 
 
-    // commands::exec_cmds(par_cmds, &matches); 
-
     let parsed_messages = match messages::parse_config(lazy_config) {
         Ok(m) => m ,
         Err(e) => {
@@ -61,7 +59,7 @@ fn main() -> Result<(), String> {
         },
     };
 
-   notes::render(&parsed_messages); 
+    commands::exec_cmds(par_cmds, parsed_messages, &matches); 
 
     Ok(())
 }
