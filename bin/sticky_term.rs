@@ -45,21 +45,15 @@ fn main() -> Result<(), String> {
         }
     }; 
 
-    let par_cmds = match commands::parsed_commands(&matches) {
-        Ok(com) => com,
-        Err(e) => {
-            return Err(e);
-        }
-    }; 
-
-    let parsed_messages = match messages::parse_config(lazy_config) {
+    let mut parsed_messages = match messages::parse_config(lazy_config) {
         Ok(m) => m ,
         Err(e) => {
             return Err(e);
         },
     };
 
-    commands::exec_cmds(par_cmds, parsed_messages, &matches); 
+    commands::parse_args_exec_command(&matches, &mut parsed_messages);
+
 
     Ok(())
 }

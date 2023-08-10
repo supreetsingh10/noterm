@@ -3,12 +3,9 @@ pub const ENV_HOME_VAR: &str = "HOME";
 
 pub const NOTE_WIDTH: u16 = 40;
 
-#[derive(PartialEq, Debug)]
+#[derive(PartialEq, Debug, Eq, Hash)]
 pub enum SubCommandNames {
     SHOW,
     PIN,
     UPDATE,
 }
-
-
-

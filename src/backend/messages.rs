@@ -3,6 +3,8 @@ use chrono::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
 use tui::{style::Color, text}; 
 
+pub type Commfun = fn(&Messages) -> Result<(), String>; 
+
 #[derive(Serialize, Deserialize, Debug, Clone,)]
 pub struct Messages {
     pub messages: Vec<Message>
@@ -18,6 +20,10 @@ pub struct Message {
 
 
 impl Message {
+    pub fn new(id: u32, m_text: String, colour: tui::style::Color) -> Self {
+        Message { message_id: id, message_text: m_text, color: colour }
+    }
+
     pub fn get_message_id(&self) -> &u32 {
         &self.message_id
     }

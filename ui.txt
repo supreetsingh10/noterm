@@ -1,3 +1,0 @@
-Fix the largest possible length of the note, outside that the text will end up in next line 
-Make constraits as they are set.
-Dynamically fix the position of the sticky notes. 
