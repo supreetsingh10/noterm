@@ -1,4 +1,4 @@
-pub mod config;
 pub mod commands;
-pub mod messages;
+pub mod config;
 pub mod constants;
+pub mod messages;

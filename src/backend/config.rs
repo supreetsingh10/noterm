@@ -1,17 +1,17 @@
-use std::path::{PathBuf, Path}; 
 use crate::backend::constants::{CONFIG_PATH, ENV_HOME_VAR};
-use std::fs; 
-use std::env::var; 
+use std::env::var;
+use std::fs;
+use std::path::{Path, PathBuf};
 
 #[derive(Clone)]
 pub struct Config {
-   /// Number of notes number: ui64
-   /// Vector of structs of notes. Vec!<notes>
-   /// path to the config of the cli path: pathbuf
-   /// if the config has been initialized or not init: bool 
-   /// string of the file in config: text : string
-   config_text: String,
-   config_path: PathBuf,
+    /// Number of notes number: ui64
+    /// Vector of structs of notes. Vec!<notes>
+    /// path to the config of the cli path: pathbuf
+    /// if the config has been initialized or not init: bool
+    /// string of the file in config: text : string
+    config_text: String,
+    config_path: PathBuf,
 }
 
 impl Default for Config {
@@ -21,23 +21,18 @@ impl Default for Config {
 }
 
 pub fn init_config() -> Result<Config, String> {
-    let mut lazy_config = Config::new(); 
+    let mut lazy_config = Config::new();
     match lazy_config.load_or_create_config_file() {
-        Ok(_) => {
-            Ok(lazy_config)
-        },
-        Err(e) => {
-            Err(e)
-        }
+        Ok(_) => Ok(lazy_config),
+        Err(e) => Err(e),
     }
 }
-
 
 impl Config {
     pub fn new() -> Self {
         Self {
-            config_text: String::from(""), 
-            config_path: PathBuf::from("")
+            config_text: String::from(""),
+            config_path: PathBuf::from(""),
         }
     }
 
@@ -45,36 +40,31 @@ impl Config {
         self.config_text
     }
 
-    fn load_or_create_config_file(&mut self) ->  Result<(), String> {
+    fn load_or_create_config_file(&mut self) -> Result<(), String> {
         // Get the environment variable home and appends it to the CONFIG_PATH
-        var(ENV_HOME_VAR).
-            map_err(|e| e.to_string()).
-            map(|mut f| {
-                f.push_str(CONFIG_PATH); 
+        var(ENV_HOME_VAR).map_err(|e| e.to_string()).map(|mut f| {
+            f.push_str(CONFIG_PATH);
 
-                let path = Path::new(&f);
+            let path = Path::new(&f);
 
+            path.exists()
+                .then(|| {
+                    self.config_path = PathBuf::from(path);
 
-                path.exists().
-                    then(|| {
-                        self.config_path = PathBuf::from(path); 
-
-                        if let Ok(text) =  fs::read_to_string(path).
-                            map_err(|e| e.to_string()) {
-                                self.config_text = text; 
+                    if let Ok(text) = fs::read_to_string(path).map_err(|e| e.to_string()) {
+                        self.config_text = text;
+                    }
+                })
+                .is_none()
+                .then(|| {
+                    fs::create_dir_all(path.parent().unwrap())
+                        .map_err(|e| e.to_string())
+                        .map(|_| {
+                            if fs::File::create(path).map_err(|e| e.to_string()).is_ok() {
+                                self.config_path = PathBuf::from(path);
                             }
-                    }).
-                is_none().
-                    then(|| {
-                        fs::create_dir_all(path.parent().unwrap()).
-                            map_err(|e| e.to_string()).
-                            map(|_| {
-                                if fs::File::create(path).
-                                    map_err(|e| e.to_string()).is_ok() {
-                                        self.config_path = PathBuf::from(path); 
-                                    }
-                            })
-                    });
-            })
+                        })
+                });
+        })
     }
 }

@@ -1,4 +1,3 @@
 // Making of ui
 
-fn main() {
-}
+fn main() {}
