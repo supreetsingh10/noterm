@@ -64,6 +64,7 @@ impl ParseNoteArgs for ArgMatches<'_> {
                     .map_err(|_| tui::style::Color::Green)
             })
             .unwrap()
+
     }
 }
 
@@ -134,10 +135,11 @@ fn delete_note(par_mess: &mut Messages, sub_m: &ArgMatches<'_>) -> Result<(), St
             (num >= 0 as usize && num < par_mess.messages.len())
                 .then(|| {
                     par_mess.messages.remove(num);
-
+                    // Starts the index from 0 irrespective where we start.
                     for (index, mess) in par_mess.messages[num..].iter_mut().enumerate() {
-                        mess.update_note_number(index);
+                        mess.update_note_number(num + index);
                     }
+
                 })
                 .unwrap()
         })
