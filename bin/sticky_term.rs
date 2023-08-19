@@ -2,7 +2,6 @@ use clap::{App, Arg, ArgMatches, SubCommand};
 use libra::backend::commands;
 use libra::backend::config::init_config;
 use libra::backend::messages;
-use libra::ui::notes;
 
 fn get_matches() -> ArgMatches<'static> {
     App::new("Sticky term")
@@ -42,6 +41,28 @@ fn get_matches() -> ArgMatches<'static> {
         .subcommand(
             SubCommand::with_name("update")
                 .about("Update the given note")
+                .arg(
+                    Arg::with_name("note")
+                        .short("n")
+                        .long("note")
+                        .takes_value(true),
+                )
+                .arg(
+                    Arg::with_name("message")
+                        .short("m")
+                        .long("message")
+                        .takes_value(true),
+                )
+                .arg(
+                    Arg::with_name("color")
+                        .short("c")
+                        .long("color")
+                        .takes_value(true),
+                ),
+        )
+        .subcommand(
+            SubCommand::with_name("delete")
+                .about("Delete the note")
                 .arg(
                     Arg::with_name("note")
                         .short("n")

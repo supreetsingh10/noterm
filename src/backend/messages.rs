@@ -40,20 +40,31 @@ impl Message {
     pub fn get_note_color(&self) -> &tui::style::Color {
         &self.color
     }
+
+    pub fn update_note_text(&mut self, text: String) {
+        self.message_text = text;
+    }
+
+    pub fn update_note_color(&mut self, color: tui::style::Color) {
+        self.color = color;
+    }
+
+    pub fn update_note_number(&mut self, num: usize) {
+        self.message_id = num as u32;
+    }
 }
 
 pub fn parse_config(config: Config) -> Result<Messages, String> {
     serde_json::from_str(config.get_config_text().as_str()).map_err(|e| e.to_string())
 }
 
-// and_then does not return a result, instead it returns self.
 pub fn write_new_config(par_mess: &Messages) -> Result<(), String> {
     var(ENV_HOME_VAR)
         .map(|mut v| {
             v.push_str(CONFIG_PATH);
             v
         })
-        .map_err(|e| e.to_string())
+        .map_err(|var_e| var_e.to_string())
         .map(|path| {
             std::fs::File::create(path).map(|mut f| {
                 let config_text = match serde_json::to_string(par_mess) {
@@ -66,5 +77,5 @@ pub fn write_new_config(par_mess: &Messages) -> Result<(), String> {
                 f.write_all(config_text.as_bytes())
             });
         })
-        .map_err(|g| g.to_string())
+        .map_err(|e| e.to_string())
 }
