@@ -9,10 +9,10 @@ pub fn parse_args_exec_command(
     par_mess: &mut Messages,
 ) -> Result<(), String> {
     match clargs.subcommand() {
-        ("show", Some(_)) => show_note(par_mess).map_err(|e| e.to_string()),
-        ("pin", Some(sub_m)) => pin_note(par_mess, sub_m).map_err(|e| e.to_string()),
-        ("update", Some(sub_m)) => update_note(par_mess, sub_m).map_err(|e| e.to_string()),
-        ("delete", Some(sub_m)) => delete_note(par_mess, sub_m).map_err(|e| e.to_string()),
+        ("show", Some(_)) => show_note(par_mess),
+        ("pin", Some(sub_m)) => pin_note(par_mess, sub_m),
+        ("update", Some(sub_m)) => update_note(par_mess, sub_m),
+        ("delete", Some(sub_m)) => delete_note(par_mess, sub_m),
         _ => Err(String::from("Invalud command executed")),
     }
 }
@@ -43,7 +43,7 @@ impl ParseNoteArgs for ArgMatches<'_> {
     fn get_note_args_message(&self) -> Result<String, String> {
         let mess = match self.value_of("message") {
             Some(mess) => {
-                if mess.len() == 0 as usize {
+                if mess.trim().is_empty() {
                     return Err(String::from("Message has no text body"));
                 }
                 mess
@@ -60,7 +60,6 @@ impl ParseNoteArgs for ArgMatches<'_> {
         self.value_of("color")
             .map(|color| {
                 tui::style::Color::from_str(color)
-                    .map(|color| color)
                     .map_err(|_| tui::style::Color::Green)
             })
             .unwrap()
@@ -69,7 +68,7 @@ impl ParseNoteArgs for ArgMatches<'_> {
 }
 
 fn show_note(par_mess: &Messages) -> Result<(), String> {
-    notes::render(&par_mess)
+    notes::render(par_mess)
 }
 
 fn pin_note(par_mess: &mut Messages, sub_m: &ArgMatches<'_>) -> Result<(), String> {
@@ -82,16 +81,14 @@ fn pin_note(par_mess: &mut Messages, sub_m: &ArgMatches<'_>) -> Result<(), Strin
 
     let c = sub_m.get_note_args_color().unwrap();
 
-    let p_mess = Message::new(par_mess.messages.len() as u32, String::from(v), c);
+    let p_mess = Message::new(par_mess.messages.len() as u32, v, c);
     par_mess.messages.push(p_mess);
 
-    show_note(&par_mess)
-        .map_err(|e| {
-            return e.to_string();
-        })
-        .ok();
+    if let Some(e) = show_note(par_mess).err() {
+        return Err(e); 
+    }
 
-    write_new_config(&par_mess)
+    write_new_config(par_mess)
 }
 
 fn update_note(par_mess: &mut Messages, sub_m: &ArgMatches<'_>) -> Result<(), String> {
@@ -102,22 +99,19 @@ fn update_note(par_mess: &mut Messages, sub_m: &ArgMatches<'_>) -> Result<(), St
         }
     };
 
-    let note: &mut Message = match par_mess.messages.get_mut(num as usize) {
+    let note: &mut Message = match par_mess.messages.get_mut(num) {
         Some(note) => note,
         None => {
-            return Err(String::from(format!(
+            return Err(format!(
                 "Invalid number of note give there are only {} notes",
                 par_mess.messages.len()
-            )));
+            ));
         }
     };
 
-    match sub_m.get_note_args_message() {
-        Ok(mess) => {
-            note.update_note_text(mess);
-        }
-        Err(_) => {}
-    };
+    if let Ok(mess) = sub_m.get_note_args_message() {
+        note.update_note_text(mess); 
+    }
 
     sub_m.value_of("color").and_then(|c| {
         tui::style::Color::from_str(c)
@@ -125,14 +119,14 @@ fn update_note(par_mess: &mut Messages, sub_m: &ArgMatches<'_>) -> Result<(), St
             .map(|col| note.update_note_color(col))
     });
 
-    write_new_config(&par_mess)
+    write_new_config(par_mess)
 }
 
 fn delete_note(par_mess: &mut Messages, sub_m: &ArgMatches<'_>) -> Result<(), String> {
     sub_m
         .get_note_args_num()
         .map(|num| {
-            (num >= 0 as usize && num < par_mess.messages.len())
+            (num < par_mess.messages.len())
                 .then(|| {
                     par_mess.messages.remove(num);
                     // Starts the index from 0 irrespective where we start.
@@ -145,5 +139,5 @@ fn delete_note(par_mess: &mut Messages, sub_m: &ArgMatches<'_>) -> Result<(), St
         })
         .map_err(|e| e.to_string());
 
-    write_new_config(&par_mess)
+    write_new_config(par_mess)
 }

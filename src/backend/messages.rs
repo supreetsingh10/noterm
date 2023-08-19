@@ -1,7 +1,7 @@
 use crate::backend::config::Config;
 use serde::{Deserialize, Serialize};
-use std::{env::var, io::Write, path::Path};
-use tui::{style::Color, text};
+use std::{env::var, io::Write};
+use tui::style::Color;
 
 use super::constants::{CONFIG_PATH, ENV_HOME_VAR};
 
