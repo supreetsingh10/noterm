@@ -8,13 +8,7 @@ use tui::style::Style;
 use tui::widgets::{Paragraph, Wrap};
 use tui::Terminal;
 
-// so we need a function that will handle the coordinate part of the function
-// Paragraph will be inside a block. The dimensions of this block is fixed because of rectangle.
 
-// the recent note is rendered first
-// the width of the vector is fixed.
-
-// next line will be because of /n, or if it exceeds the width
 const INIT_X: u16 = 0;
 const INIT_Y: u16 = 0;
 //              x,y,width,height
@@ -85,9 +79,7 @@ pub fn render(msg: &Messages) -> Result<(), String> {
     .map_err(|e| e.to_string())
 }
 
-/// Needs to be tested.
-// Make sure that it does not go out of the window
-// Check if we can get more space in the terminal if try to render something longer than 60 pixels.
+
 fn fix_coordinates_of_notes(
     msg: &Messages,
     term: &mut Terminal<CrosstermBackend<Stdout>>,

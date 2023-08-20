@@ -5,11 +5,6 @@ use std::path::{Path, PathBuf};
 
 #[derive(Clone)]
 pub struct Config {
-    /// Number of notes number: ui64
-    /// Vector of structs of notes. Vec!<notes>
-    /// path to the config of the cli path: pathbuf
-    /// if the config has been initialized or not init: bool
-    /// string of the file in config: text : string
     config_text: String,
     config_path: PathBuf,
 }

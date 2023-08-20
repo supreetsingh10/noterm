@@ -5,8 +5,6 @@ use tui::style::Color;
 
 use super::constants::{CONFIG_PATH, ENV_HOME_VAR};
 
-pub type Commfun = fn(&Messages) -> Result<(), String>;
-
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct Messages {
     pub messages: Vec<Message>,
@@ -19,7 +17,6 @@ impl Messages {
 }
 
 #[derive(serde::Serialize, serde::Deserialize, Debug, Clone)]
-// Since it is vector, the last element of the vector will be the latest one.
 pub struct Message {
     message_id: u32,
     message_text: String,
