@@ -12,6 +12,12 @@ pub struct Messages {
     pub messages: Vec<Message>,
 }
 
+impl Messages {
+    pub fn new() -> Self {
+        Messages { messages: Vec::new() }
+    }
+}
+
 #[derive(serde::Serialize, serde::Deserialize, Debug, Clone)]
 // Since it is vector, the last element of the vector will be the latest one.
 pub struct Message {
@@ -54,8 +60,11 @@ impl Message {
     }
 }
 
-pub fn parse_config(config: Config) -> Result<Messages, String> {
-    serde_json::from_str(config.get_config_text().as_str()).map_err(|e| e.to_string())
+pub fn parse_config(config: Config) -> Messages {
+    match serde_json::from_str(config.get_config_text().as_str()) {
+       Ok(mess) => mess, 
+       Err(_) => Messages::new(),
+    }
 }
 
 pub fn write_new_config(par_mess: &Messages) -> Result<(), String> {

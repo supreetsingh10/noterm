@@ -79,18 +79,11 @@ fn main() -> Result<(), String> {
     let lazy_config = match init_config() {
         Ok(c) => c,
         Err(e) => {
-            println!("{}", e.to_string());
             return Err(e);
         }
     };
 
-    let mut parsed_messages = match messages::parse_config(lazy_config) {
-        Ok(m) => m,
-        Err(e) => {
-            println!("{}", e.to_string());
-            return Err(e);
-        }
-    };
+    let mut parsed_messages = messages::parse_config(lazy_config);
 
     commands::parse_args_exec_command(&matches, &mut parsed_messages).map_err(|e| {
         println!("{}", e.to_string());

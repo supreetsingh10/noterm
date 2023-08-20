@@ -42,6 +42,7 @@ impl Config {
 
     fn load_or_create_config_file(&mut self) -> Result<(), String> {
         // Get the environment variable home and appends it to the CONFIG_PATH
+        println!("Comes here"); 
         var(ENV_HOME_VAR).map_err(|e| e.to_string()).map(|mut f| {
             f.push_str(CONFIG_PATH);
 
@@ -57,6 +58,7 @@ impl Config {
                 })
                 .is_none()
                 .then(|| {
+                    println!("It has created the path"); 
                     fs::create_dir_all(path.parent().unwrap())
                         .map_err(|e| e.to_string())
                         .map(|_| {

@@ -123,8 +123,7 @@ fn update_note(par_mess: &mut Messages, sub_m: &ArgMatches<'_>) -> Result<(), St
 }
 
 fn delete_note(par_mess: &mut Messages, sub_m: &ArgMatches<'_>) -> Result<(), String> {
-    sub_m
-        .get_note_args_num()
+    if let Ok(_) = sub_m .get_note_args_num()
         .map(|num| {
             (num < par_mess.messages.len())
                 .then(|| {
@@ -135,9 +134,9 @@ fn delete_note(par_mess: &mut Messages, sub_m: &ArgMatches<'_>) -> Result<(), St
                     }
 
                 })
-                .unwrap()
-        })
-        .map_err(|e| e.to_string());
-
-    write_new_config(par_mess)
+        }) {
+            write_new_config(par_mess)
+        } else {
+            Err(String::from("Failed to delete note"))
+        } 
 }
