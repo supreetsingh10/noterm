@@ -4,8 +4,8 @@ use libra::backend::config::init_config;
 use libra::backend::messages;
 
 fn get_matches() -> ArgMatches<'static> {
-    App::new("Sticky term")
-        .about("Make sticky notes for your terminal")
+    App::new("noterm")
+        .about("Pin notes on your terminal.")
         .subcommand(
             SubCommand::with_name("pin")
                 .about("Pin the message")
@@ -50,13 +50,13 @@ fn get_matches() -> ArgMatches<'static> {
                 .arg(
                     Arg::with_name("message")
                         .short("m")
-                        .long("message")
+                        .long("msg")
                         .takes_value(true),
                 )
                 .arg(
                     Arg::with_name("color")
                         .short("c")
-                        .long("color")
+                        .long("col")
                         .takes_value(true),
                 ),
         )
