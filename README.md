@@ -1,4 +1,4 @@
-# **  NOTERM STICKY NOTES FOR GNU/LINUX **
+#  NOTERM STICKY NOTES FOR GNU/LINUX 
 
 Sticky notes for your terminal, written in rust. 
 
