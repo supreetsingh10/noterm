@@ -35,3 +35,7 @@ You can update the message text and color of the note, with this command.
 
 ### noterm delete -n [note index]
 Deletes the specific note from the config. 
+
+### Colors available for notes. 
+Ratatui library was used for making the UI for the application. The list of colours available can be seen from their
+documentation. [colors](https://docs.rs/ratatui/latest/ratatui/style/enum.Color.html)
