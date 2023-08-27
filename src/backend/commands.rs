@@ -13,7 +13,7 @@ pub fn parse_args_exec_command(
         ("pin", Some(sub_m)) => pin_note(par_mess, sub_m),
         ("update", Some(sub_m)) => update_note(par_mess, sub_m),
         ("delete", Some(sub_m)) => delete_note(par_mess, sub_m),
-        _ => Err(String::from("Invalud command executed")),
+        _ => Err(String::from("Invalud command entered")),
     }
 }
 

@@ -43,12 +43,15 @@ pub fn render(msg: &Messages) -> Result<(), String> {
         Err(e) => return Err(e.to_string()),
     };
 
+    term.clear().ok(); 
+
     term.draw(|f| {
         for (m_it, c_it) in msg.messages.clone().iter().zip(coord_vec.iter()) {
             let rect = rects_for_notes(c_it.to_owned());
             let chunks = Layout::default()
                 .direction(Direction::Vertical)
                 .constraints([Constraint::Ratio(1, 10), Constraint::Ratio(5, 2)].as_ref())
+                .margin(1 as u16)
                 .split(rect);
 
             for (index, r) in chunks.iter().enumerate() {
