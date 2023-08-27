@@ -51,7 +51,6 @@ pub fn render(msg: &Messages) -> Result<(), String> {
             let chunks = Layout::default()
                 .direction(Direction::Vertical)
                 .constraints([Constraint::Ratio(1, 10), Constraint::Ratio(5, 2)].as_ref())
-                .margin(1 as u16)
                 .split(rect);
 
             for (index, r) in chunks.iter().enumerate() {

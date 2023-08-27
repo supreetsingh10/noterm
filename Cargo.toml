@@ -1,5 +1,5 @@
 [package]
-name = "sticky_term"
+name = "noterm"
 version = "0.1.0"
 edition = "2021"
 
@@ -10,8 +10,8 @@ name="libra"
 path="src/lib.rs"
 
 [[bin]]
-name="sticky_term"
-path="bin/sticky_term.rs"
+name="noterm"
+path="bin/noterm.rs"
 
 
 [[bin]]
